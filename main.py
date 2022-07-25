@@ -6,128 +6,45 @@ INTENTS = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=INTENTS)
 token = os.getenv("TOKEN")
 
-@bot.event
-async def on_ready():
-    await bot.change_presence(status=discord.Status.dnd ,activity=discord.Activity(name="문의는 DM"))
-    print(f"-------------------------------\n"
-    f"[ + ] Bot connected to Discord\n"
-    f"> User: {bot.user.name}#{bot.user.discriminator}\n"
-    f"> ID: {bot.user.id}\n"
-    f"> Server: {len(bot.guilds)}\n"
-    f"----------- ⮟ Log ⮟ ----------")
+async def SendError(self, ctx:discord.ApplicationContext, message):
+        embed = discord.Embed(title=f'실패 Failed # {ctx.command}', description=f'{message}', color=self.color)
+        await ctx.respond(embed=embed)
 
-@bot.command(name="나이버튼")
-async def ageroles(ctx):
-    button4 = Button(
-        label="나이비공개",
-        style=discord.ButtonStyle.gray,
-        emoji="💙"
-    )
-    button1 = Button(
-        label="10대",
-        style=discord.ButtonStyle.gray,
-        emoji="🧡"
-    )
-    button2 = Button(
-        label="20대",
-        style=discord.ButtonStyle.gray,
-        emoji="💛"
-    )
-    button3 = Button(
-        label="30대",
-        style=discord.ButtonStyle.gray,
-        emoji="💚"
-    )
+@discord.slash_command(name='인증', description='서포트 서버 인증을 시도합니다.')
+async def CaptchaSystem(self, ctx:discord.ApplicationContext):
+    role = ctx.guild.get_role(988011044817485824)
+    a = ""
+    Captcha_img = ImageCaptcha()
+    if role not in ctx.author.roles:
+        for i in range(6):
+            a += str(random.randint(0, 9))
 
-    embed = discord.Embed(
-        title="당신의 나이를 알려주세요!",
-        description="아래의 버튼에서 당신의 나이대에 맞는 버튼을 눌러주시면 역할이 들어옵니다!",
-        color=discord.Color.nitro_pink()
-    )
+        name = './Verifty/' + str(ctx.author. id) + ".png"
+        Captcha_img.write(a, name)
 
-    view = View(timeout=None)
-    view.add_item(button1)
-    view.add_item(button2)
-    view.add_item(button3)
-    view.add_item(button4)
+        embed = discord.Embed(title=f'대기중 Waited # {ctx.command}', description=f'숫자를 채팅으로 입력해주세요.', color=self.color)
+        embed.add_field(name='이용 약관', value=f'✔ㅣ이용약관 (필독)',inline=False)
 
-    await ctx.send(embed=embed, view=view)
-    async def button4callback(interaction: discord.Interaction):
-        member = interaction.user
-        role = interaction.guild.get_role(874283897796558878)
-        await member.add_roles(role)
-        await interaction.response.send_message("나이비공개 역할을 받았습니다!", ephemeral=True)
-    async def button1callback(interaction: discord.Interaction):
-        member = interaction.user
-        role = interaction.guild.get_role(874283861784297542)
-        await member.add_roles(role)
-        await interaction.response.send_message("10대 역할을 받았습니다!", ephemeral=True)
-    async def button2callback(interaction: discord.Interaction):
-        member = interaction.user
-        role = interaction.guild.get_role(874283862568615958)
-        await member.add_roles(role)
-        await interaction.response.send_message("20대 역할을 받았습니다!", ephemeral=True)
-    async def button3callback(interaction: discord.Interaction):
-        member = interaction.user
-        role = interaction.guild.get_role(874283897385537546)
-        await member.add_roles(role)
-        await interaction.response.send_message("30대 역할을 받았습니다!", ephemeral=True)
+        edit_msg = await ctx.respond(file=discord.File(name), embed=embed)
 
-    button1.callback = button1callback
-    button2.callback = button2callback
-    button3.callback = button3callback
-    button4.callback = button4callback
+        def check(m: discord.Message):  # m = discord.Message.
+            return m.author == ctx.author and m.channel.id == ctx.channel.id 
 
+        try:
+            msg = await self.bot.wait_for('message', check=check, timeout=15)
 
-@bot.command(name="성별버튼")
-async def genderroles(ctx):
-    button1 = Button(
-        label="남자",
-        style=discord.ButtonStyle.gray,
-        emoji="👦"
-    )
-    button2 = Button(
-        label="여자",
-        style=discord.ButtonStyle.gray,
-        emoji="👩"
-    )
-    button3 = Button(
-        label="성별비공개",
-        style=discord.ButtonStyle.gray,
-        emoji="👨‍🦲"
-    )
-
-    embed = discord.Embed(
-        title="당신의 성별를 알려주세요!",
-        description="아래의 버튼에서 당신의 성별에 맞는 버튼을 눌러주시면 역할이 들어옵니다!",
-        color=discord.Color.nitro_pink()
-    )
-
-    view = View()
-    view.add_item(button1)
-    view.add_item(button2)
-    view.add_item(button3)
-
-    await ctx.send(embed=embed, view=view)
-
-    async def button1callback(interaction: discord.Interaction):
-        member = interaction.user
-        role = interaction.guild.get_role(874283666807877673)
-        await member.add_roles(role)
-        await interaction.response.send_message("남자 역할을 받았습니다!", ephemeral=True)
-    async def button2callback(interaction: discord.Interaction):
-        member = interaction.user
-        role = interaction.guild.get_role(874283657207099413)
-        await member.add_roles(role)
-        await interaction.response.send_message("여자 역할을 받았습니다!", ephemeral=True)
-    async def button3callback(interaction: discord.Interaction):
-        member = interaction.user
-        role = interaction.guild.get_role(874289033453387836)
-        await member.add_roles(role)
-        await interaction.response.send_message("성별비공개 역할을 받았습니다!", ephemeral=True)
-
-    button1.callback = button1callback
-    button2.callback = button2callback
-    button3.callback = button3callback
-
+        except asyncio.TimeoutError:
+            await self.SendError(ctx, '인증에 실패했습니다. 시간이 초과되었습니다.')
+        else:
+            if msg.content == a:
+                embed = discord.Embed(title=f'성공 Success', description=f'{ctx.author}님의 인증에 성공했습니다.', color=self.color)
+                embed.add_field(name='지급 역할', value=f'<@&{role.id}> (2초 후 자동 지급)', inline=False)
+                await edit_msg.edit_original_message(embed=embed)
+                await asyncio.sleep(2)
+                await ctx.author.add_roles(role)
+            else:
+                await self.SendError(ctx, '인증에 실패했습니다. 잘못 입력하셨습니다.')
+    else:
+        pass
+    
 bot.run(token)
