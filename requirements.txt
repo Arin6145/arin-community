@@ -7,5 +7,5 @@ frozenlist==1.3.0
 idna==3.3
 multidict==6.0.2
 numpy==1.23.1
-py-cord @ git+https://github.com/Rapptz/discord.py
+discord.py @ git+https://github.com/Rapptz/discord.py
 yarl==1.7.2
