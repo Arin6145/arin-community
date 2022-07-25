@@ -10,7 +10,7 @@ async def SendError(self, ctx:discord.ApplicationContext, message):
         embed = discord.Embed(title=f'실패 Failed # {ctx.command}', description=f'{message}', color=self.color)
         await ctx.respond(embed=embed)
 
-@discord.slash_command(name='인증', description='서포트 서버 인증을 시도합니다.')
+@bot.slash_command(name='인증', description='서포트 서버 인증을 시도합니다.')
 async def CaptchaSystem(self, ctx:discord.ApplicationContext):
     role = ctx.guild.get_role(988011044817485824)
     a = ""
